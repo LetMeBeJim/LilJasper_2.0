@@ -1,7 +1,7 @@
 const { REST, Routes } = require('discord.js');
 const {token} = require('./password.json')
 
-const processedAll = [];
+var processedAll = [];
 
 const commands = [
   {
@@ -24,7 +24,15 @@ const commands = [
 
   {
     name: 'delete_that',
-    description: 'delete item from my todo list',
+    description: 'delete item from my todo list, input with item number of the get_all list',
+    options: [
+      {
+        name: 'number',
+        description: 'item to be deleted',
+        type: 4,
+        require: true,
+      }
+    ]
   },
 
   {
@@ -94,6 +102,7 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
+
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -101,10 +110,11 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply(interaction.options.getString('stuff') );
   }
 
+  try {
   if (interaction.commandName === 'get_all') {
     const response = await fetch('https://jimstasks.ue.r.appspot.com/api')
     const data = await response.json();
-    const processedAll = [];
+    processedAll = [];
     const result = [];
 
     for (element of data){
@@ -113,8 +123,10 @@ client.on('interactionCreate', async interaction => {
     }
 
     data ? await interaction.reply(result.toString().replaceAll(',', '')) : await interaction.reply("didn't work")
+  }}catch (e) {
+    console.log(e)
   }
-
+  try {
   if (interaction.commandName === 'get_from') {
     const sector = interaction.options.getString('sector');
 
@@ -133,8 +145,10 @@ client.on('interactionCreate', async interaction => {
     }
 
     await interaction.reply(processed.toString().replaceAll(',', ''));
+  }}catch (e) {
+    console.log(e)
   }
-
+  try {
   if (interaction.commandName === 'add_item') {
     const sector = interaction.options.getString('sector');
     const detail = interaction.options.getString('details');
@@ -143,14 +157,28 @@ client.on('interactionCreate', async interaction => {
     fetch("https://jimstasks.ue.r.appspot.com/ins/"+JSON.stringify(toAdd))
 
     await interaction.reply('added!');
+  }}catch (e) {
+    console.log(e)
   }
-
+  try {
   if (interaction.commandName === 'show_sectors') {
     await interaction.reply('personal, school, home')
 
 
+  }}catch (e) {
+    console.log(e)
   }
+  try {
+  if (interaction.commandName === 'delete_that') {
+    const itemNum = interaction.options.getInteger('number');
+    const item = processedAll[itemNum-1];
 
+    fetch("https://jimstasks.ue.r.appspot.com/del/"+item)
+
+    await interaction.reply('deleted!');
+  }}catch (e) {
+    console.log(e)
+  }
 
 });
 
