@@ -1,5 +1,5 @@
 const { REST, Routes } = require('discord.js');
-const {token} = require('./config.json')
+const {token} = require('./password.json')
 
 const processedAll = [];
 
