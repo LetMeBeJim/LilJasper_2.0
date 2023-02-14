@@ -1,7 +1,7 @@
 const { REST, Routes } = require('discord.js');
 const {token} = require('./config.json')
 
-const items = [];
+const processedAll = [];
 
 const commands = [
   {
@@ -104,13 +104,15 @@ client.on('interactionCreate', async interaction => {
   if (interaction.commandName === 'get_all') {
     const response = await fetch('https://jimstasks.ue.r.appspot.com/api')
     const data = await response.json();
-    const processed = [];
+    const processedAll = [];
+    const result = [];
 
     for (element of data){
-      processed.push(element.detail + "\n")
+      processedAll.push(element.detail);
+      result.push(element.detail + "\n")
     }
 
-    data ? await interaction.reply(processed.toString().replaceAll(',', '')) : await interaction.reply("didn't work")
+    data ? await interaction.reply(result.toString().replaceAll(',', '')) : await interaction.reply("didn't work")
   }
 
   if (interaction.commandName === 'get_from') {
