@@ -77,6 +77,12 @@ const commands = [
 // include this for slash commands
 const rest = new REST({ version: '10' }).setToken(token);
 
+function ping() {
+  fetch('https://jimstasks.ue.r.appspot.com/api')
+  fetch('https://jimsiteserver.ue.r.appspot.com/api')
+}
+setInterval(ping, 540000);
+ping();
 
 // just making sure it works, not necessary
 (async () => {
